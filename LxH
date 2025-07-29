@@ -3,8 +3,8 @@ local SaveManager = loadstring(game:HttpGetAsync("https://raw.githubusercontent.
 local InterfaceManager = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ActualMasterOogway/Fluent-Renewed/master/Addons/InterfaceManager.luau"))()
  
 local Window = Library:CreateWindow{
-    Title = "Legends Hub",
-    SubTitle = "by ZeusLGD",
+    Title = "Nebula Hub | Game: Muscle Legends | Version [v.2.6.2]",
+    SubTitle = "by ttvkaiser",
     TabWidth = 160,
     Size = UDim2.fromOffset(1087, 690.5),
     Resize = true, -- Resize this ^ Size according to a 1920x1080 screen, good for mobile users but may look weird on some devices
@@ -515,101 +515,19 @@ fastRebirthsToggle:OnChanged(function(State)
 	end
 end)
 
--- Fast Strength
-local speedGrind = rebirthFarmFolder:AddSwitch("Fast Strength", function(bool)
-	if _G.fastGrindActive then
-		_G.fastGrindActive = false
-		print("Grind parado.")
-		unequipAllPets()
-		return
-	end
-
-	if not bool then
-		unequipAllPets()
-		return
-	end
-
-	_G.fastGrindActive = true
-	print("Grind iniciado.")
-
-	equipUniquePet("Swift Samurai")
-
-	local player = game:GetService("Players").LocalPlayer
-	local delay = 0
-	local loopAmount = 12
-
-	for i = 1, loopAmount do
-		task.spawn(function()
-			while _G.fastGrindActive do
-				player.muscleEvent:FireServer("rep")
-				task.wait(delay)
-			end
-		end)
-	end
-
-	task.spawn(function()
-		while _G.fastGrindActive do
-			if math.random() < 0.9 then
-				player.muscleEvent:FireServer("rep")
-			end
-			task.wait(delay)
-		end
-	end)
-	local frameToggle = rebirthFarmFolder:AddSwitch("Hide Frames", function(bool)
-	local rSto = game:GetService("ReplicatedStorage")
-	for _, obj in pairs(rSto:GetChildren()) do
-		if obj.Name:match("Frame$") then
-			obj.Visible = not bool
+-- Speed Grind (No Rebirth)
+local speedGrindToggle = Tabs.Rebirth:CreateToggle("SpeedGrind", {Title = "Fast Grind (No Rebirth)", Default = false})
+speedGrindToggle:OnChanged(function(State)
+	if State then
+		for i = 1, 12 do
+			task.spawn(function()
+				while speedGrindToggle.Value do
+					game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+					task.wait(0.083)
+				end
+			end)
 		end
 	end
-end)
-
-local speedGrind = rebirthFarmFolder:AddSwitch("Fast Strength", function(bool)
-	if _G.fastGrindActive then
-		_G.fastGrindActive = false
-		print("Grind parado.")
-		unequipAllPets()
-		return
-	end
-
-	if not bool then
-		unequipAllPets()
-		return
-	end
-
-	_G.fastGrindActive = true
-	print("Grind iniciado.")
-
-	equipUniquePet("Swift Samurai")
-
-	local player = game:GetService("Players").LocalPlayer
-	local delay = 0
-	local loopAmount = 12
-
-	for i = 1, loopAmount do
-		task.spawn(function()
-			while _G.fastGrindActive do
-				player.muscleEvent:FireServer("rep")
-				task.wait(delay)
-			end
-		end)
-	end
-
-	task.spawn(function()
-		while _G.fastGrindActive do
-			local pingStat = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]
-			local ping = pingStat and pingStat:GetValue() or 0
-
-			if ping > 500 then
-				delay = 0.002
-			else
-				delay = 0
-			end
-
-			print("Delay:", delay, "Ping:", ping)
-			task.wait(1)
-		end
-	end)
 end)
 
 Tabs.Rocks:AddSection("Auto Punch Rocks")
@@ -1546,7 +1464,7 @@ SaveManager:BuildConfigSection(Tabs.Settings)
 Window:SelectTab(1)
 
 Library:Notify{
-    Title = "Legends Hub",
+    Title = "Nebula Hub",
     Content = "The script has been loaded.",
     Duration = 1
 }
